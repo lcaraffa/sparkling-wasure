@@ -1,0 +1,113 @@
+FROM ubuntu:devel
+
+
+MAINTAINER Laurent Caraffa "caraffa.laurent@gmail.com"
+
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# Generals
+RUN apt-get update &&  apt-get install -y cmake nano sudo gdb libboost-all-dev g++ wget  --assume-yes
+
+#Lidar format dps
+RUN apt-get update &&  apt-get install -y xsdcxx  libxerces-c-dev  --assume-yes
+
+# Externs dps
+#RUN apt-get update &&  apt-get install -y libpng12-dev libjpeg-dev zlibc libxmu-dev libxi-dev freeglut3-dev libtiff5-dev  --assume-yes
+#RUN apt-get update &&  apt-get install -y  libjpeg-dev zlibc libxmu-dev libxi-dev freeglut3-dev libtiff5-dev  --assume-yes
+
+
+# Matis-lib dps
+RUN apt-get update &&  apt-get install -y libeigen3-dev   --assume-yes
+
+# Scala
+RUN  apt-get update &&  apt-get install -y scala --assume-yes
+
+
+# Spark
+RUN cd /usr/local/bin/ && \
+    wget https://archive.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3-scala2.13.tgz && \
+    wget https://github.com/sbt/sbt/releases/download/v1.0.0/sbt-1.0.0.tgz && \
+    tar -xvf spark-3.5.0-bin-hadoop3-scala2.13.tgz && \
+    tar -xvf sbt-1.0.0.tgz && \
+    rm ./*gz
+
+RUN apt-get update && apt-get install -y imagemagick --assume-yes
+
+# CGAL and co
+# libxerces-c-dev libxerces-c28
+RUN apt-get update && apt-get -y install libcgal-qt5-dev libcgal-dev libxerces-c-dev  libboost-dev libtinyxml-dev libxerces-c-dev libann-dev --assume-yes
+
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    libcgal-dev
+
+RUN apt-get update && apt-get -y install libtbb-dev --assume-yes
+
+RUN apt-get update && apt-get -y install libpq-dev --assume-yes
+
+
+RUN apt-get update &&  apt-get install -y  openjdk-8-jdk  --assume-yes
+ENV JAVA_HOME "/usr/lib/jvm/java-8-openjdk-amd64/"
+
+RUN cd /usr/local/bin/ && \
+    wget https://archive.apache.org/dist/hadoop/core/hadoop-2.7.7/hadoop-2.7.7-src.tar.gz && \
+    tar -xvf hadoop-2.7.7-src.tar.gz && \
+    mkdir -p ./hadoop-2.7.7-src/hadoop-hdfs-project/hadoop-hdfs/src/build && \
+    cd ./hadoop-2.7.7-src/hadoop-hdfs-project/hadoop-hdfs/src/build && \
+    awk 'NR==23{$0="set(GENERATED_JAVAH true)\n"$0}1' ../CMakeLists.txt > ../CMakeLists.txt.tmp && mv ../CMakeLists.txt.tmp ../CMakeLists.txt &&  \
+    cmake ../ && \
+    make 
+
+
+# RUN apt-get update && apt-get install -y python3-pip python3-gdal && pip3 install matplotlib plyfile
+
+## For the benchmark
+RUN apt-get update && yes "8" | apt-get -y install libpng-dev liblapack-dev libblas-dev ffmpeg openexr libtiff-dev libopenexr-dev libsuitesparse-dev libgl1-mesa-dev libglu1-mesa-dev --assume-yes ##  gnuplot --assume-yes
+RUN apt-get update &&  apt-get -y install libxml2-dev
+
+
+# Télécharger et installer Miniconda
+RUN wget  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    /bin/bash /tmp/miniconda.sh -b -p /opt/conda && \
+    rm /tmp/miniconda.sh
+
+# Ajouter conda au PATH
+ENV PATH=/opt/conda/bin:$PATH
+
+# Copier les fichiers environment.yml dans le conteneur
+COPY services/mesh23dtile/environment.yml /tmp/environment_mesh23Dtile.yml
+COPY services/extern/ign-pdal-tools/environment.yml /tmp/environment_ign_pdal_tools.yml
+# ENV PYTHONPATH=/app/wasure/services/extern/ign-pdal-tools:$PYTHONPATH
+ENV PYTHONPATH=/app/wasure/services/extern/ign-pdal-tools
+# Créer le premier environnement Conda (mesh23Dtile)
+RUN conda env create -f /tmp/environment_mesh23Dtile.yml && conda clean -a
+
+# Créer le deuxième environnement Conda (ign-pdal-tools)
+RUN conda env create -f /tmp/environment_ign_pdal_tools.yml && conda clean -a
+
+# Faire de l'environnement Conda mesh23Dtile l'environnement par défaut
+RUN echo "source activate mesh23Dtile" > ~/.bashrc
+ENV CONDA_DEFAULT_ENV=mesh23Dtile
+ENV PATH=/opt/conda/envs/mesh23Dtile/bin:$PATH
+
+# COPY ./run_workflow_ed.sh /app/wasure/run_workflow_ed.sh
+
+COPY ./cmake_params.txt /app/wasure/cmake_params.txt
+COPY ./services/ /app/wasure/services/
+COPY ./run_workflow.sh /app/wasure/run_workflow.sh
+COPY ./src/ /app/wasure/src/
+COPY ./CMakeLists.txt /app/wasure/CMakeLists.txt
+COPY ./algo-env.sh /app/wasure/algo-env.sh
+
+
+# COPY ./build/ /app/wasure/build/
+RUN cd /app/wasure/ && \
+    touch /.dockerenv && \
+    ./src/docker/docker_interface.sh compile -j4 -t3
+
+
+

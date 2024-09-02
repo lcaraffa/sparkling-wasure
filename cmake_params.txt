@@ -1,0 +1,4 @@
+option(DDT_DEBUG "DDT debugging output" OFF)
+option(DDT_USE_THREADS "DDT multithreading" ON)
+option(DDT_TEST "DDT tests" OFF)
+option(DDT_USE_HDFS "DDT use hdfs" OFF)

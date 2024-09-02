@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<env>
+  <datasets>
+    <austin>
+      <dim>3</dim>
+      <ndtree_depth>1</ndtree_depth>
+      <max_ppt>50000</max_ppt>
+    </austin>
+  </datasets>
+</env>

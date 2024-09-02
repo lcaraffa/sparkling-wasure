@@ -1,0 +1,9 @@
+#ifndef CONF_HPP
+#define CONF_HPP
+
+// These values are automatically set according to their cmake variables.
+#define PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}"
+#define STYLE_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src/qgis/"
+#define SPARK_HADOOP_ACTIVATED "${SPARK_HADOOP_ACTIVATED}"
+
+#endif // CONF_HPP

@@ -1,0 +1,6 @@
+tmp
+.vscode
+__pycache__
+ign_pdal_tools.egg-info
+dist
+*.idea*

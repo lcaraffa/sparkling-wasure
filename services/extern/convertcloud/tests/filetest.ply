@@ -1,0 +1,10 @@
+ply
+format ascii 1.0
+comment https://github.com/SintefRaufossManufacturing/convertcloud
+element vertex 2
+property float x
+property float y
+property float z
+end_header
+0.123 4.567 8.901
+2.345 6.789 0.123

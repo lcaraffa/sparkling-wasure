@@ -1,0 +1,10 @@
+SET(LAS_INCLUDE_DIR
+  ${EXTERN_PROJECT_SRC_DIR}/LAStools/LASlib/inc/
+  ${EXTERN_PROJECT_SRC_DIR}/LAStools/LASzip/src/
+  )
+FIND_LIBRARY(LAS_LIBRARIES liblas.so /usr/local/lib/ ${GLOBAL_BUILD_DIR}/extern/LAStools/)
+
+if ( LAS_LIBRARIES )
+ MESSAGE(STATUS "LAS OK")
+endif ( LAS_LIBRARIES )
+

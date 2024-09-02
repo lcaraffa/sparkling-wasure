@@ -1,0 +1,16 @@
+name: mesh23Dtile
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - pymeshlab==2021.10
+      - matplotlib
+      - numpy
+      - pandas
+      - pyproj
+      - plyfile
+      - trimesh
+      - git+https://github.com/VCityTeam/py3dtilers

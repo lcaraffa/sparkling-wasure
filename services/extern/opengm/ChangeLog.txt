@@ -1,0 +1,469 @@
+****************************************************************************************************
+** OpenGM develop
+**
+****************************************************************************************************
+*
+****
+
+
+****************************************************************************************************
+** OpenGM GithubVersion
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+*
+*
+*******
+
+****************************************************************************************************
+** OpenGM 2.3.6 (30.10.2015)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+*
+*
+***********
+* bugfixes:
+***********
+* several small python bugfixes
+* bugfix several typos 
+* add missing includes
+* replace assert by OPENGM_TEST in unit-tests
+*
+***************
+* New Features:
+***************
+* Add Cut, Glue and Cut (CGC) inference for multicut-problems
+* Add Multicut Fusion (intersection based inference)  inference for multicut-problems
+* Muticut supports generalized Potts functions up to order 11
+* Add CanonicalView Function
+* Extend MatLab interface
+* TRWS can now return min marginals
+* improved install scripts (Thanks to Ghislain Antony Vaillant)
+* Multicut can start with a tighter polytope
+
+
+
+****************************************************************************************************
+** OpenGM 2.3.5 (02.07.2015)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* news:
+******** 
+* new branch at github that supports learning (experimental)
+*
+***********
+* bugfixes:
+***********
+* undef eps-def in MPLP
+* bugfix of minor typos 
+* fix compiler issues on OSX
+* fix cmake issues
+* make compatiblewith Vigra 1.10
+*
+***************
+* New Features:
+***************
+* add wrapper for SRMP
+* support for blackbox-test of higher-order models
+* adjusting parameters for smoothing based algorithms
+* improved detection of gurobi
+* interfaces for bloosomV and planarity -> planar max-cut solver available
+* implement interface for LPCPLEX to set a starting-point (this can help a lot)
+* add implementation for more advanced queues
+* Multicut:
+*  - speed up multicut by using advanced queues (ChangeablePriorityQueue)
+*  - add option for multicut with chordal-search or post-chordal testing
+*  - add option to buffer the best state for the multicut algorithm
+* add more inference method in the reduced inference caller
+* add support for constrained graphical models:
+*  - add generic (I)LP-interface for CPLEX and Gurobi
+*  - add (I)LP solver for graphical models (based on CPLEX and GUROBI) that can handel 
+*  --- constrained-based functions ( constraints and constraints with additional auxillary variables)
+*  --- support incrematal construction of the polytope
+*  - add interface for constrain-functions
+*  - add linear constraint function
+*  - add label order function
+*  - add number of active labels function
+* add so;vers to Matlab-Interface
+*****
+
+
+
+****************************************************************************************************
+** OpenGM 2.3.4 (19.11.2014)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* bugfixes: 
+************
+* adopt patches for GCO and MPLP to latest versions
+* fix several warnings
+*
+***************
+* New features:
+***************
+* add Wrapper for Gurobi
+* extended interface for LPCPlex
+* add support for FoE-functions
+*
+*****
+
+
+****************************************************************************************************
+** OpenGM 2.3.3 (01.08.2014)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* bugfixes: 
+************
+* Ad3 (wrong bound) -> use now our own fork, need to be deleted and downloaded new
+* InfAndFlip (tiny numerical problems)
+* DAOOPT (worker flag is set to ON automatically ) 
+* LibDAI (wrapper was brocken - fixed )
+* model-order : 32-bit bug
+* python : minor small fixes
+*
+***************
+* New features:
+***************
+* Graphical Model:
+* - Implement the functor concept which avoids lookups from the factor to the function
+*   This allows to call a functor on a factor, which will work on the function behind directly.
+*
+* Inference:
+* - Proposal Based Fusion (new)
+* - Self Fusion (new)
+* - LSA-TR (new)
+* - Make Sequential BP and Sequential TRBP available trough the caller 
+* - Asymetric Multyway Cuts (new - supported by multicut)
+* - ADSAL (smoothing strategy significantly refactored)
+* - Astar (improfe default ordering)
+* - DD-based (decomposition into k-fans)
+* - Message Passing: implement functor operations -> sigificant speedup
+*
+* Timming Visitor:
+* - stores accumulated time instead of time for a single step
+* - supports memmory logging
+*
+* Python: 
+* - convenient function to create potts model for 3d grid graph with a flexible regularizer
+* - added workflow parm to multicut-python
+*
+* Matlab:
+* - efficient interface to load and store Potts models
+*
+* C++-Tutorials:
+* - learning modelparameters with EM 
+* - inference on the or-and-semiring
+* - inference on the min-sum-semiring
+* - inference on the max-sum-semiring
+* - building models
+* - load and store models
+* - reimplementations of the Middleburry MRF benchmark
+* - supervised image segmentation 
+*****
+
+
+****************************************************************************************************
+** OpenGM 2.3.2 (05.5.2014)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* some bugfixes
+*****
+* minor MAC bugfixes
+* increase soft-inf for MQPBO ( was too small)
+* Bugfix in commandlineinterface concerning storing empty vectors
+* Bugfixes for ADSAL, TRWSi, Nesterov
+* Bugfix incorrect assert-usage in MArray -> Signifficant speedup
+* Bugfix manual decomposition in DD-based methods
+* add exception if dynamic programming is used for higher-order models
+* some bugfixes in doxygen
+* fix code for some warnings
+
+* new features
+*****
+* MatLab: Interface for a more efficient adding of pairwise factors
+* MatLab: enable some inference algorithms for the matlab interface
+* additional features for ADSAL, TRWSi, Nesterov
+* added code to get fractional ad3 solutions
+* Speedup for model evaluation
+* Refactoring generation of primal solution for DD-Based algorithms ->Speedup
+* make parameter for stoppint TRWS on change of dual available via parameter object
+* make manual decomposition available for DD-based methods
+* Implement bound and reparametrisation interface for FastPD
+
+
+****************************************************************************************************
+** OpenGM 2.3.1 (04.3.2014)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* some bugfixes
+*****
+
+* bugfixes
+*****
+* fix incorrect linking in CMake for MAC
+* add missing cmath-include in visitor
+* fix bug in dynamic programming (had worked only up to 255 states correctly before (this bug had caused sideeffects in DualDecomosition and Astar, this is fixed too)
+
+* new features
+*****
+* add nesterovs algorithm
+* add smoothing strategy in seperate file 
+* add interface to dual variables for some methods
+
+
+****************************************************************************************************
+** OpenGM 2.3.0 (24.2.2014)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* simpler visitor framework (not fully compatible with the old one
+* update of instalation scripts for external code
+* several bugfixes
+*****
+
+* bugfixes
+*****
+* bugfix in pythpn glue code for generalized inference interface generation
+* bugfix in python wrapped graphical model manipulator (lock/unlocks's where missing)
+* simplified the adding of mebmber function of python wrapped inference algorithms
+* minor bugfixes for several solvers
+* bugfixes for TWSi,transportation-solver, CombiLP
+* GCO: Patches updated for latest version
+* IBFS: Patch and wrapper updated for latest version (still bugy - bug reported to the IBFS authors)
+* MULTICUT: Better timeout handling
+* DAOOPT: Visitor injection
+
+* new features
+*****
+
+* Visitor: New and simpler Visitor implementation
+* Visitor: addlog() and log() for additional protocolation
+* FastPD: Lower bound
+* DualDecomposition: Add hypergraph-subproblems into cmd
+* Converter: Partition models -> weighted UDAG
+* Python: fusion Moves
+
+
+****************************************************************************************************
+** OpenGM 2.2.1 (05.12.2013)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* bugfixes
+*****
+
+* several bugfixes for MacOS (thanks to Toru Tamaki)
+* clean up of old/unused code
+* Fix critical bug in python-interface with Potts functions
+* TRWSi can hande isolated nodes
+* Add stopping condition for for TRWSi
+* Some fixes in the LibDAI-wrapper (Thanks to Toru Tamaki)
+* Improve CMake Find-Script for CPleX (Thanks to Ulrich Koethe)
+* start with the new visitor interface
+
+****************************************************************************************************
+** OpenGM 2.2.0 (10.10.2013)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* some refactoring
+*****
+
+* remove editable support for graphical model ( was to slow any way -> use graphicalmodelmanipolator
+* change internal storage of factor-variables -> use reserve options to speedup code and avoid szstem calls
+* add LPGurobi (still alpha version with linking problems, we will fix this soon)
+* add support for naming cplex constraints (thanks to martinsch)
+* bugfix partition-move: typo in macro
+* add unsigned char support to marray_hdf5
+* bugfixes in cmake for better MAC-support (thanks to vene)
+* add autodetect for numpy (thanks to vene)
+* add wrapper for MPLP
+* add wrapper for daoopt/braobb
+* refactoring reduced inference - supports now higher order too
+* add modelmanipulator for fixing variables in models
+
+
+
+****************************************************************************************************
+** OpenGM 2.1.2 (18.07.2013)
+**
+** Developers in charge: 
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* Bugfixes
+*****
+
+* fix memory leak in QPBO interface
+* bugfix for modelgenerator/unittest - testing with varying number of labels
+* bugfixes TRWSi
+* bugfixes ADSAL
+* TRWS interface now supports varying number of labels
+* add unittest for gco interface
+* add modelmanipulator to add evidence to models
+* use modelmanipulator instead of editable-models in AStar
+
+
+****************************************************************************************************
+** OpenGM 2.1.1 (17.06.2013)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* Bugfixes
+*****
+
+* update matlab interface
+* bugfixes python interface
+* bugfix libdai interface/cales
+* bugfix mqpbo visitor
+
+
+
+****************************************************************************************************
+** OpenGM 2.1 (31.05.2013)
+**
+** Developers in charge: 
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* Since the release of 2.0.2 some time has gone we have fixed several bugs and add new functionality.
+* OpenGM has been used for a computer vision benchmark, which has profit from the high flexibility of
+* OpenGM. 
+*****
+
+* bug-fixes in DualDecomposition
+* bug-fixes in Alpha-beta-swap (stopping condition)
+* bug-fixes for several functions ( e.g. sparsefunction)
+* bug-fixes for Gibbs
+* bug-fixes for code using external libraries 
+* several small bugfixes
+* CMake cleanup
+* add support for maximizing models with LPCPLEX
+* add compiler-warning-level-option to cmake
+* add method to get the function corresponding to a factor
+* add method to get internalIDs to add additional constraints to LPCPLEX 
+
+* generalize the caller interface -> all callers need to be a bit modified
+* add python interface (beta-state)
+* add new matlab interface (beta-state)
+* add some modelconverters e.g. opengm2uai
+
+* change default mode into RELEASE
+* unittest now always use asserts even in release mode 
+
+
+* New inference Methods
+ - MQPBO
+ - Reduced Inference
+ - Alpha-Expansion-Fusion (using the reduction code of Alexander Fix)
+ - InfAndFlip (Meta-solver) 
+ - native opengm TRWS solver (implemented by Bogdan Savchynskyy)
+ - native opengm ADSAL solver (implemented by Bogdan Savchynskyy)
+ - primal-LP-bound - code to get feasible primal values for local polytope relaxations (implemented by Bogdan Savchynskyy)
+* new wrappers for external libs
+ - FastPD
+ - GCO-Lib
+
+
+****************************************************************************************************
+** OpenGM 2.0.2 beta (01.06.2012)
+**
+** Developers in charge: 
+**  * Bjoern Andres        ( bjoern[AT]andres[DOT]sc )
+**  * Thorsten Beier       ( thorsten.beier[AT]iwr[DOT]uni-heidelberg[DOT]de )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* We realize, that having just tables available to store/represent functions, which was sufficient for 
+* our problems at this time, is not sufficient for many large scale problems. The fact that i) many 
+* factors map the same function to different variables and ii) functions can often be represented much
+* more memory efficient. This ends up in the extended factor graph framework which includes functions 
+* as another set of nodes in the graph and allows factors to share functions. Furthermore, opengm-model 
+* can now deal with different types of functions.
+* As a consequence OpenGM2 is not compatible with OpenGM1
+*****
+
+* Change to from BSD to MIT licence 
+* put project on github
+* reorganize project structure
+* Extend factor graph models by a set of function(-nodes)
+* add several type of functions 
+* introduce more template parameters to the model
+ - ValueType type used for objective function
+ - IndexType type used to index variables and factors 
+ - LabelType type used for state-/label-space
+* add different space types
+* re-implement the model-decomposition
+* model-generator and blackbox-test-framework for inference-unit-tests
+   
+* add inference algorithms
+ - dualdecomposition with subgradient and bundle methods
+ - alpha-expansion
+ - alpha-beta-swap
+ - dynamic programming
+ - ILP and LP-relaxation solvers (using CPLEX)
+ - LOC
+ - QPBO
+ - 2SAT-solver
+ - gibbs-sampler
+ - swendsenwang algorithm
+* add wrappers to external inference libraries
+ - extern/MRF-LIB
+ - extern/QPBO
+ - extern/TRWS
+ - extern/LibDAI
+ - provide wrappers for fast external maxflow code (IBFS, Kolmogorov's MaxFlow)
+* redesign LBP and TRBP 
+* redesign the visitor concept for code injection
+* implement our own command-line tool
+
+
+****************************************************************************************************
+** OpenGM 1.0 (21.09.2010)
+**
+** Developers in charge: 
+**  * Bjoern Andres        ( bjoern[AT]andres[DOT]sc )
+**  * Joerg Hendrik Kappes ( kappes[AT]math[DOT]uni-heidelberg[DOT]de )
+****************************************************************************************************
+* Initial release as a merge of two independent projects by Bjoern Andres and Joerg Hendrik Kappes. 
+*****
+
+* discrete factor graph models over various semi-rings which can be exchanged by templates
+* factors only support explicit functions (tables) but can depend from more than 2 variables
+* inference algorithms
+ - AStar
+ - LBP
+ - TRBP
+ - GraphCut (using boost/max-flow)
+ - ICM
+ - LazzyFlipper
+* command-line interface with tclap
+* file i/o which allows to save models into HDF5 files
+* primitive matlab interface
+* cmake build scripts
