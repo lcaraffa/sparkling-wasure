@@ -190,7 +190,7 @@ The code will be executed with the local build => good for coding / debugging.
 
 # Todos
 - ☐ Improving line of sight estimation
-- ☐ Improving / speed up the coloring scheme
+- ☐ Improving / speed up the coloring scheme (actually not working well on tiles intersection)
 - ☐ Improving surface reconstruction score function with state of the art approach.
 
 # Contributors 

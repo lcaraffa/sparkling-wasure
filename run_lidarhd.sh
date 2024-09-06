@@ -10,7 +10,7 @@ while [[ "$#" -gt 0 ]]; do
   case $1 in
       --input_dir) INPUT_DIR="$2"; shift ;;      
       --output_dir) OUTPUT_DIR="$2"; shift ;;
-      --params) PARAMS="${2%/}/"; shift ;;
+      --params) PARAMS="${2%/}"; shift ;;
       --colorize) DO_COLORIZE="TRUE" ;;
     *) echo "Unknown parameter passed: $1"; usage ;;
   esac
@@ -23,7 +23,7 @@ done
 if [ -e "${PARAMS}" ]; then
     PARAMS_CMD=" --params ${PARAMS}"
 fi
-if [ -e "${DO_COLORIZE}" ]; then
+if [ -n "${DO_COLORIZE}" ]; then
     COLORIZE_FLAG=" --colorize"
 fi
 

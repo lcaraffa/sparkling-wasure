@@ -3,7 +3,7 @@
   <datasets>
     <austin>
       <dim>3</dim>
-      <ndtree_depth>1</ndtree_depth>
+      <ndtree_depth>2</ndtree_depth>
       <max_ppt>100000</max_ppt>
     </austin>
   </datasets>
