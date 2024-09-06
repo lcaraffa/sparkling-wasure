@@ -35,7 +35,7 @@ def transfer_colors(input_mesh, input_pts_dir, output_colorized_dir):
             if intersect :
                 print("[intersect] " + input_mesh + " " + filename)
                 ms.load_new_mesh(file_path)
-                ms.vertex_attribute_transfer(sourcemesh=acc,targetmesh=0,colortransfer=True,upperbound=pymeshlab.Percentage(10))
+                ms.vertex_attribute_transfer(sourcemesh=acc,targetmesh=0,colortransfer=True,upperbound=pymeshlab.Percentage(0.5))
                 glob_intersect = True
                 acc = acc+1
             else :
