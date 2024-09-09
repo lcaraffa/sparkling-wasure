@@ -25,4 +25,4 @@
 #define DIM_SIZE_NB (50)
 #define GLOB_SMOOTH (1)
 
-#define MAX_TRIANGLE_SIZE (150)
+#define MAX_TRIANGLE_SIZE (500)
