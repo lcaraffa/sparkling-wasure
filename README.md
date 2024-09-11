@@ -76,7 +76,7 @@ For example, a 37-tile mesh was created with the following configuration on a co
 ```
 The `ndtree_depth` is set to 8, and the maximum number of points per tile is set to `2000000`. To speed up the computation, try increasing the number of points per tile as much as possible.
 Reducing the maximum depth of the ndtree will also speed up computation and reduce approximation errors (improving the mesh quality).
-:warning: Increasing the maximum number of points per tile will require more memory :warning:
+⚠️  Increasing the maximum number of points per tile will require more memory ⚠️
 To use this with the previous example: save it in the input directory `${PWD}/lidarhd_project/inputs/wasure_metadata.xml`, then run.
 
 ```console
