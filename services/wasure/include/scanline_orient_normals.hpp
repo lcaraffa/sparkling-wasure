@@ -9,6 +9,7 @@
 //
 // Author(s)     : Simon Giraudot
 
+// https://github.com/CGAL/cgal/blob/master/Point_set_processing_3/include/CGAL/scanline_orient_normals.h
 #ifndef CGAL_SCANLINE_ORIENT_NORMALS_H
 #define CGAL_SCANLINE_ORIENT_NORMALS_H
 
@@ -100,7 +101,8 @@ scanline_base (Iterator begin, Iterator end,
     using Vector_3 = typename Kernel::Vector_3;
     using Line_3 = typename Kernel::Line_3;
     using Plane_3 = typename Kernel::Plane_3;
-    const double limit = CGAL_PI * 0. / 180.;
+    //const double limit = CGAL_PI * 0. / 180.;
+    const double limit = CGAL_PI * 30. / 180.;    
     Line_3 pca2;
     linear_least_squares_fitting_3
     (boost::make_transform_iterator
@@ -457,8 +459,8 @@ void scanline_orient_normals (PointRange& points, const NamedParameters& np = pa
         = CGAL::approximate_sqrt((bbox.xmax() - bbox.xmin()) * (bbox.xmax() - bbox.xmin())
                                  + (bbox.ymax() - bbox.ymin()) * (bbox.ymax() - bbox.ymin())
                                  + (bbox.zmax() - bbox.zmin()) * (bbox.zmax() - bbox.zmin()));
-    //double limit = 0.05 * bbox_diagonal;
-    double limit = 10;
+    double limit = 0.05 * bbox_diagonal;
+    //double limit = 10;
     Iterator scanline_begin = points.begin();
     for (Iterator it = points.begin(); it != points.end(); ++ it)
     {

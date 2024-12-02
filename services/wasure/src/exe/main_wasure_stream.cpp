@@ -2489,7 +2489,8 @@ int preprocess(Id tid,wasure_params & params, int nb_dat)
         CGAL::Bbox_3 bbox;
         double alpha = 200.0;
         int acc=0;
-        int max_ppf = 2000000;
+        int max_ppf = 5000000;
+	//int max_ppf = 100000000;
         for (auto pp : points)
         {
             auto vx = std::get<0>(pp)[0];

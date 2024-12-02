@@ -96,7 +96,7 @@ function build # Build docker container
     case ${NAME_IMG_BASE} in
 	"ddt_img_base_devel")
 	    #NO_CACHE=" --no-cache "
-	    docker build ${PROXY_CMD} ${NO_CACHE} -t  ${NAME_IMG_BASE} -f ${DDT_MAIN_DIR}/src/docker/Dockerfile-base-Ubuntu-devel ${DDT_MAIN_DIR}
+	    docker build ${PROXY_CMD} ${NO_CACHE} -t  ${NAME_IMG_BASE}${NAME_IMG_TAG} -f ${DDT_MAIN_DIR}/src/docker/Dockerfile-base-Ubuntu-devel ${DDT_MAIN_DIR}
 	    ;;
 	"ddt_img_base_devel_proxy")
 	    docker build ${PROXY_CMD} ${NO_CACHE} -t  ${NAME_IMG_BASE} -f ${DDT_MAIN_DIR}/src/docker/Dockerfile-base-Ubuntu-devel-proxy ${DDT_MAIN_DIR}
