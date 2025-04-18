@@ -1,4 +1,4 @@
-FROM ubuntu:devel
+FROM ubuntu:24.04
 
 
 MAINTAINER Laurent Caraffa "caraffa.laurent@gmail.com"
