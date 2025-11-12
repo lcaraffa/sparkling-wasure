@@ -48,7 +48,7 @@ Results will be stored in the `./output_examples/` directory.
 
 ### Run on LiDAR HD  dataset 
 To run the code on a LiDAR HD tile collection : 
-  - Go to [LiDAR HD dataset](https://geoservices.ign.fr/lidarhd), select a set of adjacent tiles and download the `liste_dalle.txt` file containing the list of laz file here : `./datas/liste_dalle.txt`.
+  - Go to [LiDAR HD dataset]([https://geoservices.ign.fr/lidarhd](https://cartes.gouv.fr/telechargement/IGNF_NUAGES-DE-POINTS-LIDAR-HD)), select a set of adjacent tiles and download the `liste_dalle.txt` file containing the list of laz file here : `./datas/liste_dalle.txt`.
 then run 
 
 ```console
