@@ -132,7 +132,8 @@ def merge_subtree(node_tt,depth,output_dir,coords) :
             ms.simplification_quadric_edge_collapse_decimation(targetfacenum = target_face_num,preserveboundary = True)
         cc = cmap(random.randrange(num_colors))
         #ms.per_face_color_function(r=str(cc[0]*255),g=str(cc[1]*255),b=str(cc[2]*255))
-        ms.save_current_mesh(file_name)
+        # Save OBJ without vertex colors to produce N3F_V3F format supported by py3dtilers
+        ms.save_current_mesh(file_name, save_vertex_color=False)
         ms.save_current_mesh(output_dir +  node_name_ply)
 
     node_dict = node2dict(full_bbox,node_name_obj,children_dict,depth,coords)

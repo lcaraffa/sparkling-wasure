@@ -78,6 +78,9 @@ RUN wget  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh 
 # Ajouter conda au PATH
 ENV PATH=/opt/conda/bin:$PATH
 
+# Activer l'acceptation automatique des TOS
+RUN conda config --set plugins.auto_accept_tos yes
+
 # Copier les fichiers environment.yml dans le conteneur
 COPY services/mesh23dtile/environment.yml /tmp/environment_mesh23Dtile.yml
 COPY services/extern/ign-pdal-tools/environment.yml /tmp/environment_ign_pdal_tools.yml
