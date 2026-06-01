@@ -4,6 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.10
+  - laspy
   - pip
   - pip:
       - pymeshlab==2021.10
@@ -13,4 +14,4 @@ dependencies:
       - pyproj
       - plyfile
       - trimesh
-      - git+https://github.com/VCityTeam/py3dtilers
+      - git+https://github.com/Oslandia/py3dtilers
