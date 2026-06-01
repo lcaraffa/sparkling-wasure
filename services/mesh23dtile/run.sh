@@ -1,3 +1,4 @@
+
 #!/bin/bash
 export CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")/" && pwd )"
 # Function to display usage
@@ -46,13 +47,15 @@ if [ -z "$output_dir" ]; then
   exit 1
 fi
 
-offset=$(cat ${xml_file} | sed -n 's/.*<bbox_ori>\([0-9.]*\)x[0-9.]*:\([0-9.]*\)x[0-9.]*:.*/\1 \2/p')
+offset=$(cat ${xml_file} | sed -n 's/.*<bbox_ori>\([0-9.]*\)x[0-9.]*:\([0-9.]*\)x[0-9.]*:\([0-9.]*\)x[0-9.]*.*/\1 \2 \3/p')
 coords=${offset// /x}
+
 input_crs="2154"
 output_crs="4978"
 
 mkdir -p "${output_dir}"
 echo "begin mesh23tile"
+
 python3 ${CUR_DIR}/mesh23dtile.py --input_dir ${input_dir} --output_dir ${output_dir} --meshlab_mode python --coords ${coords} --mode_proj 0
 echo "end mesh23dtile.py"
 
