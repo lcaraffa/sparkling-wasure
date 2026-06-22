@@ -1,4 +1,3 @@
-import sys
 import os
 import re
 import math
@@ -9,11 +8,9 @@ import random
 import json
 import string
 from pathlib import Path
-from datetime import datetime
 import pymeshlab
 from octree import *
 import pyproj
-import trimesh
 
 num_colors = 20
 cmap = plt.cm.get_cmap('tab20c', num_colors)
@@ -23,12 +20,11 @@ target_face_num=100000
 max_depth = 5
 geom_error = [20,10,5,2,1,0]
 transformer = pyproj.Transformer.from_crs("epsg:2154", "epsg:4979")
-transformer_glob = pyproj.Transformer.from_crs("epsg:2154", "epsg:4978")
 
 def is_inside_bbox(bbox,pts) :
-    return ((pts[0] > bbox[0] and pts[0] < bbox[1]) and
-            (pts[1] > bbox[2] and pts[1] < bbox[3]) and
-            (pts[2] > bbox[4] and pts[2] < bbox[5]))
+    return ((pts[0] >= bbox[0] and pts[0] <= bbox[1]) and
+            (pts[1] >= bbox[2] and pts[1] <= bbox[3]) and
+            (pts[2] >= bbox[4] and pts[2] <= bbox[5]))
 
 def get_bb_center(bb) :
     return ((bb[1]+bb[0])/2,(bb[3]+bb[2])/2,(bb[5]+bb[4])/2)
@@ -51,11 +47,21 @@ def trans_bbox(bb,coords) :
     return [xmin_new, xmax_new, ymin_new,ymax_new, zmin_new, zmax_new]
 
 def bbox2region(bb,coords) :
+    """Converts a local bbox (Lambert93 offset) into 3D Tiles `region`
+    (west, south, east, north in radians, min/max height in meters).
+    """
     x_shift = float(coords.split("x")[0])
     y_shift = float(coords.split("x")[1])
-    xmin_new, ymin_new, zmin_new = transformer.transform(bb[0]+x_shift,bb[2]+y_shift,bb[4])
-    xmax_new, ymax_new, zmax_new = transformer.transform(bb[1]+x_shift,bb[3]+y_shift,bb[5])
-    return list([ymin_new,xmin_new,ymax_new,xmax_new,zmin_new,zmax_new])
+    lat_min, lon_min, h_min = transformer.transform(bb[0]+x_shift,bb[2]+y_shift,bb[4])
+    lat_max, lon_max, h_max = transformer.transform(bb[1]+x_shift,bb[3]+y_shift,bb[5])
+    return [
+        math.radians(lon_min),
+        math.radians(lat_min),
+        math.radians(lon_max),
+        math.radians(lat_max),
+        h_min,
+        h_max,
+    ]
 
 
 def bbox23Dbox(bb) :
@@ -78,15 +84,11 @@ class tree_obj(object):
 
 def print_node(depth,str_node,list_sons) :
     print("node depth " + str(depth) + " : " + str_node + " <= " + ' '.join(list_sons))    
-
-#def depth2geomerr(depth) :
     
     
 def node2dict(bbox,name,children,depth,coords) :
     leaf_dict = {}
 
-    #import pdb; pdb.set_trace() 
-    #leaf_dict["boundingVolume"] = { "region": bbox }
     if coords :
         leaf_dict["boundingVolume"] = { "region": bbox2region(bbox,coords) }
     else :
@@ -94,7 +96,7 @@ def node2dict(bbox,name,children,depth,coords) :
 
     leaf_dict["raw_bbox"] = { "box" :  bbox }        
     leaf_dict["content"] =  { "uri" :  str(name)  }
-    leaf_dict["geometricError"] = str(geom_error[depth])
+    leaf_dict["geometricError"] = float(geom_error[depth])
     leaf_dict["refine"] = "REPLACE"
     leaf_dict["children"] = children
     return leaf_dict
@@ -102,23 +104,35 @@ def node2dict(bbox,name,children,depth,coords) :
 
 def merge_subtree(node_tt,depth,output_dir,coords) :
     joint_string = []
-    node_name_obj = "tiles/" + str(depth) + "_" + ''.join(random.choices(string.ascii_uppercase + string.digits, k = size_s))  + '.obj'
-    node_name_ply = "tiles/" + str(depth) + "_" + ''.join(random.choices(string.ascii_uppercase + string.digits, k = size_s))  + '.ply'
+    node_name_obj = (
+        "tiles/" 
+        + str(depth) 
+        + "_" 
+        + ''.join(random.choices(string.ascii_uppercase + string.digits, k = size_s))  
+        + '.obj'
+    )
+    node_name_ply = (
+        "tiles/" 
+        + str(depth) 
+        + "_" 
+        + ''.join(random.choices(string.ascii_uppercase + string.digits, k = size_s))  
+        + '.ply'
+    )
     file_name = output_dir +  node_name_obj
     full_bbox = []
     children_dict = []
     if node_tt.isLeafNode :
         for x in node_tt.data :
-            #leaf_dict = node2dict(x.bbox,x.name,[])
-            full_bbox = bbox_union(full_bbox,x.bbox)
+            full_bbox = bbox_union(full_bbox, x.bbox)
             joint_string += [x.name]
-            #children_dict += [leaf_dict]
 
 
     for bb in node_tt.branches :
         if bb is None :
             continue
-        (sub_bbox,sub_string,sub_dict) = merge_subtree(bb,depth+1,output_dir,coords)
+        sub_bbox, sub_string, sub_dict = merge_subtree(
+            bb, depth+1, output_dir, coords
+            )
         children_dict+= [sub_dict]
         joint_string += sub_string
         full_bbox = bbox_union(full_bbox,sub_bbox)
@@ -129,49 +143,51 @@ def merge_subtree(node_tt,depth,output_dir,coords) :
             ms.load_new_mesh(ff)
         ms.flatten_visible_layers()
         if not node_tt.isLeafNode :
-            ms.simplification_quadric_edge_collapse_decimation(targetfacenum = target_face_num,preserveboundary = True)
+            ms.simplification_quadric_edge_collapse_decimation(
+                targetfacenum = target_face_num, preserveboundary = True
+                )
         cc = cmap(random.randrange(num_colors))
-        #ms.per_face_color_function(r=str(cc[0]*255),g=str(cc[1]*255),b=str(cc[2]*255))
         ms.save_current_mesh(file_name)
-        ms.save_current_mesh(output_dir +  node_name_ply)
+        ms.save_current_mesh(output_dir+node_name_ply)
 
     node_dict = node2dict(full_bbox,node_name_obj,children_dict,depth,coords)
     print_node(depth,file_name,joint_string)            
-    return  (full_bbox,[file_name],node_dict);
+    return  (full_bbox,[file_name],node_dict)
 
 
 def extract_bbox_form_header(full_path) : 
     header_string = os.popen("head -n 5 " + full_path).read()
-    return  [float(i) for i in re.split(r'\s{1,}',list(filter(lambda x: "comment bbox" in x , header_string.split("\n")))[0])[2:][:-1]]
+    return [
+        float(i) 
+        for i in re.split(
+            r"\s{1,}",
+            list(filter(lambda x: "comment bbox" in x , header_string.split("\n")))[0]
+        )[2:][:-1]
+    ]
 
 
 def build_3DT(inputs) :
     full_bbox = []
-    if False :
-        full_bbox = [float(i) for i in inputs["bbox"].split(" ")]
-    else : 
-        for ff in os.listdir(inputs["input_dir"]):
-            if ff.endswith(".ply"):
-                full_path = os.path.join(inputs["input_dir"], ff)
-                ply_bbox = extract_bbox_form_header(full_path)
-                full_bbox = bbox_union(full_bbox,ply_bbox)
+    for ff in os.listdir(inputs["input_dir"]):
+        if ff.endswith(".ply"):
+            full_path = os.path.join(inputs["input_dir"], ff)
+            ply_bbox = extract_bbox_form_header(full_path)
+            full_bbox = bbox_union(full_bbox,ply_bbox)
 
-        bbox_len = max(full_bbox[1] - full_bbox[0],
-                       full_bbox[3] - full_bbox[2],
-                       full_bbox[5] - full_bbox[4])
-        full_bbox[3] = full_bbox[2] + bbox_len
-        full_bbox[5] = full_bbox[4] + bbox_len
+    bbox_len = max(
+        full_bbox[1] - full_bbox[0],
+        full_bbox[3] - full_bbox[2],
+        full_bbox[5] - full_bbox[4]
+    )
+    full_bbox[3] = full_bbox[2] + bbox_len
+    full_bbox[5] = full_bbox[4] + bbox_len
     print("full bbox :" + str(full_bbox))
 
     origin = get_bb_center(full_bbox)
     myTree = Octree(
-            full_bbox[1] - full_bbox[0],
-            origin,
-            max_type="depth",
-            max_value=max_depth
+        full_bbox[1] - full_bbox[0], origin, max_type="depth", max_value=max_depth
     )
 
-            
     for ff in os.listdir(inputs["input_dir"]):
         if ff.endswith(".ply"):
             full_path = os.path.join(inputs["input_dir"], ff)
@@ -196,46 +212,23 @@ def build_3DT(inputs) :
                 myTree.insertNode(tile_center,new_ob)
         
 
-    tile_dic=[]
     tile_output_dir = inputs["output_dir"] + "/"
     Path(tile_output_dir + "/tiles" ).mkdir(parents=True, exist_ok=True)
 
-    if inputs["mode_proj"] == '0' :
-        coords  = inputs["coords"]
-        inputs["coords"]=''
-        x_shift = float(coords.split("x")[0])
-        y_shift = float(coords.split("x")[1])
-        xmin_new, ymin_new, zmin_new = transformer_glob.transform(x_shift,y_shift,0)
-    else :
-        xmin_new=0
-        ymin_new=0
-        zmin_new=0
-        
-    (sub_bbox,sub_string,sub_dict) = merge_subtree(myTree.root,0,tile_output_dir,inputs["coords"])
+    # No `transform` is set on the root tile anymore. Each leaf will be
+    # rewritten by finalize.py to point to the external tileset.json that
+    # py3dtilers already produced for that tile, and those tilesets embed
+    # their own correct ENU->ECEF matrix. Adding a matrix here would stack
+    # with theirs and break tile orientation on the globe (as previously
+    # observed in iTowns).
+
+    sub_bbox,sub_string,sub_dict = merge_subtree(
+        myTree.root, 0, tile_output_dir, inputs["coords"]
+    )
 
     final_dict = {}
-    
-    sub_dict["transform"]= [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-      xmin_new,	
-        ymin_new,
-        zmin_new,
-      1
-    ]
-
     final_dict["asset"] = { "version" : "1.0" }
-    final_dict["geometricError"] = "20"
+    final_dict["geometricError"] = float(geom_error[0])
     final_dict["root"] = sub_dict
     json_name = inputs["output_dir"] +  "/tileset_tmp.json"    
     with open(json_name, 'w') as fp:
@@ -284,7 +277,7 @@ if __name__ == '__main__':
         inputs["meshlab_mode"]=args.meshlab_mode
 
     
-    print("\n=== Params ===  \n" + "\n".join("{} ==> {}".format(k, v) for k, v in inputs.items()))
+    print("\n=== Params mesh23dtile ===  \n" + "\n".join("{} ==> {}".format(k, v) for k, v in inputs.items()))
     build_3DT(inputs)
 
 

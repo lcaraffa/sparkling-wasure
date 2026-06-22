@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
         
         
-    print("\n=== Params ===  \n" + "\n".join("{} ==> {}".format(k, v) for k, v in inputs.items()))
+    print("\n=== Params colorize ===  \n" + "\n".join("{} ==> {}".format(k, v) for k, v in inputs.items()))
     process(inputs)
 
 

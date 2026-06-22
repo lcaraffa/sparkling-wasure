@@ -46,7 +46,7 @@ if [ -z "$output_dir" ]; then
   exit 1
 fi
 
-offset=$(cat ${xml_file} | sed -n 's/.*<bbox_ori>\([0-9.]*\)x[0-9.]*:\([0-9.]*\)x[0-9.]*:.*/\1 \2/p')
+offset=$(cat ${xml_file} | sed -n 's/.*<bbox_ori>\([0-9.]*\)x[0-9.]*:\([0-9.]*\)x[0-9.]*:\([0-9.]*\)x[0-9.]*.*/\1 \2 \3/p')
 coords=${offset// /x}
 input_crs="2154"
 output_crs="4978"

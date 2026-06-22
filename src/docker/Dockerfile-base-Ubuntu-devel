@@ -1,10 +1,10 @@
 FROM ubuntu:24.04
 
 
-MAINTAINER Laurent Caraffa "caraffa.laurent@gmail.com"
+LABEL maintainer="Laurent Caraffa <caraffa.laurent@gmail.com>"
 
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Generals
 RUN apt-get update &&  apt-get install -y cmake nano sudo gdb libboost-all-dev g++ wget  --assume-yes
@@ -51,7 +51,7 @@ RUN apt-get update && apt-get -y install libpq-dev --assume-yes
 
 
 RUN apt-get update &&  apt-get install -y  openjdk-8-jdk  --assume-yes
-ENV JAVA_HOME "/usr/lib/jvm/java-8-openjdk-amd64/"
+ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 
 RUN cd /usr/local/bin/ && \
     wget https://archive.apache.org/dist/hadoop/core/hadoop-2.7.7/hadoop-2.7.7-src.tar.gz && \
@@ -83,8 +83,17 @@ COPY services/mesh23dtile/environment.yml /tmp/environment_mesh23Dtile.yml
 COPY services/extern/ign-pdal-tools/environment.yml /tmp/environment_ign_pdal_tools.yml
 # ENV PYTHONPATH=/app/wasure/services/extern/ign-pdal-tools:$PYTHONPATH
 ENV PYTHONPATH=/app/wasure/services/extern/ign-pdal-tools
+
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
 # Créer le premier environnement Conda (mesh23Dtile)
 RUN conda env create -f /tmp/environment_mesh23Dtile.yml && conda clean -a
+
+# Forcer la bonne version de py3dtiles
+RUN /opt/conda/envs/mesh23Dtile/bin/pip uninstall -y py3dtiles && \
+    /opt/conda/envs/mesh23Dtile/bin/pip install "py3dtiles @ git+https://gitlab.com/py3dtiles/py3dtiles@v9.0.0"
+
 
 # Créer le deuxième environnement Conda (ign-pdal-tools)
 RUN conda env create -f /tmp/environment_ign_pdal_tools.yml && conda clean -a

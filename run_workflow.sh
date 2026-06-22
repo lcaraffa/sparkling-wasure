@@ -3,7 +3,7 @@
 
 export DDT_MAIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")/" && pwd )"
 BUILDS_DIR="${DDT_MAIN_DIR}/build/"
-DO_COLORIZE="FALSE"
+DO_COLORIZE="TRUE"
 DO_LOD="TRUE"
 mkdir -p  /tmp/spark-events
 
@@ -63,6 +63,7 @@ CURRENT_CONDA_ENV=$(conda info --envs | grep '*' | awk '{print $1}')
 
 TILE_DIR=${OUTPUT_DIR}/outputs/tiles/
 if [[ ${DO_COLORIZE} == "TRUE" ]]; then
+    echo -e "\n -[Create colorized tiles]-"
     TILE_DIR=${OUTPUT_DIR}/colorized_tiles
     ${DDT_MAIN_DIR}/services/colorize/colorize.sh --input_dir ${LAZ_INPUT_DIR} --output_dir ${OUTPUT_DIR}
 fi
