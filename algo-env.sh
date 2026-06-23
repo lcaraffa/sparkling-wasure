@@ -1,5 +1,5 @@
 ## Docker 
-export NAME_IMG_BASE=ddt_img_base_devel_vtest
+export NAME_IMG_BASE=ddt_img_base_devel
 export CONTAINER_NAME_SHELL="ddt_container_shell"
 export CONTAINER_NAME_COMPILE="ddt_container_compile"
 export DO_USE_LOCAL_BUILD="FALSE"

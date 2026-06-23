@@ -94,7 +94,7 @@ function build # Build docker container
 	PROXY_CMD=" --build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY} "
     fi
     case ${NAME_IMG_BASE} in
-	"ddt_img_base_devel_vtest")
+	"ddt_img_base_devel")
 	    #NO_CACHE=" --no-cache "
 	    docker build ${PROXY_CMD} ${NO_CACHE} -t  ${NAME_IMG_BASE}${NAME_IMG_TAG} -f ${DDT_MAIN_DIR}/src/docker/Dockerfile-base-Ubuntu-devel ${DDT_MAIN_DIR}
 	    ;;
